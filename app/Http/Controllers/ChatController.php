@@ -186,7 +186,10 @@ class ChatController extends Controller
         $chat->delete();
         UserChat::query()->where('chat_id', $id)->delete();
 
-        return response()->json(['message' => 'Chat successfully deleted']);
+        return response()->json([
+            'message' => 'Chat successfully deleted',
+            "data" => $chat
+        ]);
     }
 
     public function getChatMembers($chat)

@@ -50,7 +50,13 @@ class UserChatController extends Controller
             $user->save();
         }
 
-        return response()->json(['message' => "The user has been successfully added to the chat"]);
+        return response()->json([
+            'message' => "The user has been successfully added to the chat",
+            "data" => [
+                "chat" => $chat,
+                "user" => $user
+            ]
+        ]);
     }
 
     /**
@@ -92,8 +98,15 @@ class UserChatController extends Controller
         }
 
         UserChat::query()->where("chat_id", $chatId)->where("user_id", $userId)->update(["is_active" => "false"]);
+        $user = User::find($userId);
 
-        return response()->json(['message' => "The user was successfully removed from the chat"]);
+        return response()->json([
+            'message' => "The user was successfully removed from the chat",
+            "data" => [
+                "chat" => $chat,
+                "user" => $user
+            ]
+        ]);
     }
 
     public function leaveChat(Request $request, int $id)
@@ -114,12 +127,14 @@ class UserChatController extends Controller
 
         // Удалить связь пользователя с чатом
         UserChat::query()->where("chat_id", $id)->where("user_id", $userId)->update(["is_active" => "false"]);
+        $user = User::find($userId);
+
 
         return response()->json([
             'message' => "Successfully left the chat",
             "data" => [
-                "user_id" => $userId,
-                "chat_id" => $id
+                "user" => $user,
+                "chat" => $chat
             ]
         ]);
     }
