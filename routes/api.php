@@ -55,7 +55,7 @@ Route::get('/websocket', function () use ($websocket) {
         new HttpServer(
             new WsServer($websocket)
         ),
-        8080
+        (int) env("WS_PORT", 8080)
     );
 
     $server->run();
