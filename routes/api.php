@@ -5,6 +5,7 @@ use App\Helpers\Websocket;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserChatController;
+use App\Http\Controllers\UserController;
 use App\Listeners\WebSocketMessageSentListener;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,8 @@ Route::post("/chats/{chatId}/members/{userId}", [UserChatController::class, 'sto
 Route::delete("/chats/{chatId}/members/{userId}", [UserChatController::class, 'destroy'])->middleware('token.auth');    // Удалить пользователя из чата
 Route::get('/chats/{id}/members', [ChatController::class, 'getChatMembers'])->middleware('token.auth');                 // Получить данные пользователей в чате
 // Route::post('/chats/{id}/join', [UserChatController::class, 'joinChat'])->middleware('token.auth');                                // Присоединиться к чату
+
+Route::get('/users/{id}/register', [UserController::class, 'registerUser']);           // Синхронизация аккаунта из идентификационного сервиса с бд мессенджера
 
 
 $websocket = new Websocket();
