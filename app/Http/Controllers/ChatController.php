@@ -62,7 +62,9 @@ class ChatController extends Controller
         if (!empty($name)) {
             $chat["name"] = $name;
         }
-
+        if (empty($avatar)) {
+            $avatar = null;
+        }
         if (empty($usersIds)) {
             $usersIds = collect($userId);
         } else {
