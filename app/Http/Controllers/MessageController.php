@@ -203,7 +203,53 @@ class MessageController extends Controller
             return response()->json(['error' => 'Chat not found'], 404);
         }
 
-        if ($type == "user_invitation") {
+//        if ($type == "user_invitation") {
+//            $newMessage = [
+//                'chat_id' => $chatId,
+//                'sender_id' => $senderId,
+//                'is_technical' => true,
+//                'technical_data' => [
+//                    "event" => $type,
+//                    "data" => $data
+//                ]
+//            ];
+//        }
+//        if ($type == "chat_created") {
+//            $newMessage = [
+//                'chat_id' => $chatId,
+//                'sender_id' => $senderId,
+//                'is_technical' => true,
+//                'technical_data' => [
+//                    "event" => $type,
+//                    "data" => $data
+//                ]
+//            ];
+//        }
+//        if ($type == "chat_edited") {
+//            $newMessage = [
+//                'chat_id' => $chatId,
+//                'sender_id' => $senderId,
+//                'is_technical' => true,
+//                'technical_data' => [
+//                    "event" => $type,
+//                    "data" => $data
+//                ]
+//            ];
+//        }
+//
+//        if ($type == "user_added") {
+//            $newMessage = [
+//                'chat_id' => $chatId,
+//                'sender_id' => $senderId,
+//                'is_technical' => true,
+//                'technical_data' => [
+//                    "event" => $type,
+//                    "data" => $data
+//                ]
+//            ];
+//        }
+
+//        if ($type == "user_kicked") {
             $newMessage = [
                 'chat_id' => $chatId,
                 'sender_id' => $senderId,
@@ -213,29 +259,7 @@ class MessageController extends Controller
                     "data" => $data
                 ]
             ];
-        }
-        if ($type == "chat_created") {
-            $newMessage = [
-                'chat_id' => $chatId,
-                'sender_id' => $senderId,
-                'is_technical' => true,
-                'technical_data' => [
-                    "event" => $type,
-                    "data" => $data
-                ]
-            ];
-        }
-        if ($type == "chat_edited") {
-            $newMessage = [
-                'chat_id' => $chatId,
-                'sender_id' => $senderId,
-                'is_technical' => true,
-                'technical_data' => [
-                    "event" => $type,
-                    "data" => $data
-                ]
-            ];
-        }
+//        }
 
         $newMessage["is_silent"] = (boolean) $isSilent;
 

@@ -59,12 +59,16 @@ class ChatController extends Controller
 
         $chat["user_id"] = $userId;
         $chat["avatar"] = $avatar;
+
+        if (empty($avatar)) {
+            $avatar = null;
+            unset($chat["avatar"]);
+        }
+
         if (!empty($name)) {
             $chat["name"] = $name;
         }
-        if (empty($avatar)) {
-            $avatar = null;
-        }
+
         if (empty($usersIds)) {
             $usersIds = collect($userId);
         } else {
@@ -94,10 +98,13 @@ class ChatController extends Controller
             $usersIds->each(function ($number) use ($newChat) {
 
                 // Создание записей в транзитивной таблице
-                UserChat::firstOrCreate(
-                    ["user_id" => $number, "chat_id" => $newChat->id],
-                    ["user_id" => $number, "chat_id" => $newChat->id]
-                );
+                if (User::find($number)) {
+                    UserChat::firstOrCreate(
+                        ["user_id" => $number, "chat_id" => $newChat->id],
+                        ["user_id" => $number, "chat_id" => $newChat->id]
+                    );
+                }
+
             });
             return response()->json([
                 "message" => "Chat created",

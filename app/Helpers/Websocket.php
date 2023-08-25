@@ -136,9 +136,10 @@ class Websocket implements MessageComponentInterface
             'status' => $responseStatus,
             'headers' => $headers
         ];
+
         $controllerResponse = $websocketResponse["response"];
 
-        if ($websocketResponse["status"] != 200) {
+        if ($websocketResponse["status"] != 200 or !empty($websocketResponse["response"]["error"])) {
             return [
                 "type" => "api",
                 "message" => "error",
@@ -185,19 +186,43 @@ class Websocket implements MessageComponentInterface
             $technicalMessage = MessageController::createTechicalMessage($chatId, 'chat_edited', [
                 "user_id" => $controllerResponse["data"]["user_id"]
             ]);
-            $this->sendMessageToChatsUsers($from, $chatId, $controllerResponse["data"], $outputMessage);
+//            $this->sendMessageToChatsUsers($from, $chatId, $controllerResponse["data"], $outputMessage);
             $this->sendMessageToChatsUsers($from, $chatId, $technicalMessage, "Message created");
         }
 
         if ($controller == "UserChatController@leaveChat") {
-            // Отправка сообщения участникам чата о том, что один из пользователей покинуд чат
+            // Отправка сообщения участникам чата о том, что один из пользователей покинул чат
             $chatId = $controllerResponse["data"]["chat_id"];
 
-            $outputMessage = "Member leave chat";
-            $technicalMessage = MessageController::createTechicalMessage($chatId, 'member_leave_chat', [
+            $outputMessage = "User left the chat";
+            $technicalMessage = MessageController::createTechicalMessage($chatId, 'user_left', [
                 "user_id" => $controllerResponse["data"]["user_id"]
             ]);
-            $this->sendMessageToChatsUsers($from, $chatId, $controllerResponse, $outputMessage);
+//            $this->sendMessageToChatsUsers($from, $chatId, $controllerResponse, $outputMessage);
+            $this->sendMessageToChatsUsers($from, $chatId, $technicalMessage, "Message created");
+        }
+
+        if ($controller == "UserChatController@store") {
+            // Отправка сообщения участникам чата о том, что пользователя добавили в чат
+            $chatId = $controllerResponse["data"]["chat"]["id"];
+
+            $outputMessage = "User was added to the chat";
+            $technicalMessage = MessageController::createTechicalMessage($chatId, 'user_added', [
+                "user_id" => $controllerResponse["data"]["user"]["id"]
+            ]);
+//            $this->sendMessageToChatsUsers($from, $chatId, $controllerResponse, $outputMessage);
+            $this->sendMessageToChatsUsers($from, $chatId, $technicalMessage, "Message created");
+        }
+
+        if ($controller == "UserChatController@destroy") {
+            // Отправка сообщения участникам чата о том, что пользователя кикнули из чата
+            $chatId = $controllerResponse["data"]["chat"]["id"];
+
+            $outputMessage = "User was kicked out of the chat";
+            $technicalMessage = MessageController::createTechicalMessage($chatId, 'user_kicked', [
+                "user_id" => $controllerResponse["data"]["user"]["id"]
+            ]);
+//            $this->sendMessageToChatsUsers($from, $chatId, $controllerResponse, $outputMessage);
             $this->sendMessageToChatsUsers($from, $chatId, $technicalMessage, "Message created");
         }
 
